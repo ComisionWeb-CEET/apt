@@ -1,27 +1,13 @@
 services:
-  db:
-    image: mysql:latest
-    container_name: mysql
-    restart: unless-stopped
-    environment:
-      - MYSQL_DATABASE=vohe_db
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - mysql-db-volume:/var/lib/mysql
-    networks:
-      - vohe_ceet
-
   backend:
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: vohe_backend
+    container_name: apt_backend
     restart: unless-stopped
     env_file: .env
-    depends_on:
-      - db
     networks:
-      - vohe_ceet
+      - apt_ceet
 
   nginx:
     build: 
@@ -37,11 +23,8 @@ services:
     depends_on:
       - backend
     networks:
-      - vohe_ceet
+      - apt_ceet
 
 networks:
-  vohe_ceet:
+  apt_ceet:
     external: true
-
-volumes:
-  mysql-db-volume:
