@@ -31,15 +31,7 @@ const pool = require('../database/connection');
 
 // app.use(limiter)
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-});
-
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
+// middlewares
 const allowedOrigins = [
   'http://localhost:5173',  // Development
   'https://sf230pr9-5173.uks1.devtunnels.ms', // Development
@@ -64,6 +56,24 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
+
+const server = http.createServer(app);
+
+const io = new Server(server, { 
+  cors: { 
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+  // Añade esta línea para forzar solo polling
+  transports: ['polling'] 
+});
 
 let asamblea = {
   tema: '',
