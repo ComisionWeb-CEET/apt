@@ -1,0 +1,47 @@
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=vohe_db
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql-db-volume:/var/lib/mysql
+    networks:
+      - vohe_ceet
+
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: vohe_backend
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - vohe_ceet
+
+  nginx:
+    build: 
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+    networks:
+      - vohe_ceet
+
+networks:
+  vohe_ceet:
+    external: true
+
+volumes:
+  mysql-db-volume:
