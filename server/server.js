@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken')
 
 const app = express()
 
-const pool = require('./database/connection');
+const pool = require('../database/connection');
 
 // const rateLimiter = new RateLimiterMemory({
 //     points: isDev ? 100 : 5, // 5 points
