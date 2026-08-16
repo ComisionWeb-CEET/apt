@@ -38,13 +38,31 @@ app.get(/.*/, (req, res) => {
 });
 
 const server = http.createServer(app);
-const io = new Server(server, { 
-  cors: { 
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
-    credentials: true
-  } 
-});
+
+const allowedOrigins = [
+  'http://localhost:5173',  // Development
+  'https://sf230pr9-5173.uks1.devtunnels.ms', // Development
+  'https://pideturno.ceet.org.es',      // Production
+  'https://www.pideturno.ceet.org.es'   // Production with www
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 
 let asamblea = {
   tema: '',
