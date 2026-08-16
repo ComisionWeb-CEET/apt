@@ -13,6 +13,8 @@ const jwt = require('jsonwebtoken')
 
 const app = express()
 
+const pool = require('./database/connection');
+
 // const rateLimiter = new RateLimiterMemory({
 //     points: isDev ? 100 : 5, // 5 points
 //     duration: 60, // per minute
@@ -35,33 +37,8 @@ app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-
-
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
-
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306,
-
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 10000,
-
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 10000,
-  ssl: { rejectUnauthorized: false },
-});
-
-pool.on('error', (err) => {
-  if (err.code === 'ECONNRESET') {
-    console.error('Database connection was reset')
-  }
-})
 
 let asamblea = {
   tema: '',
