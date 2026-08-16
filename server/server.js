@@ -438,9 +438,9 @@ io.on("connection", async (socket) => {
 
 });
 
-const port = process.env.port || 8080;
+const PORT = process.env.PORT || 8080;
 
-server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-  console.log(`http://localhost:${port}`);
+server.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
+  console.log(`http://localhost:${PORT}`);
 })
