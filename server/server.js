@@ -1,35 +1,17 @@
 require("dotenv").config();
 
-// const rateLimit = require('express-rate-limit')
 const express = require('express')
 const http = require('http')
 const { Server } = require('socket.io')
 const mysql = require('mysql2/promise')
 const path = require('path')
 const cors = require('cors')
-// const { RateLimiterMemory } = require('rate-limiter-flexible');
 
 const jwt = require('jsonwebtoken')
 
 const app = express()
 
 const pool = require('../database/connection');
-
-// const rateLimiter = new RateLimiterMemory({
-//     points: isDev ? 100 : 5, // 5 points
-//     duration: 60, // per minute
-// });
-
-// const limiter = rateLimit({
-// 	windowMs: 1 * 60 * 1000, // 1 minute
-// 	limit: 10, // Limit each IP to 100 requests per `window` (here, per 1 minute)
-// 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-// 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-// 	ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-//   message: { error: 'Too many requests, please try again later.' },
-// })
-
-// app.use(limiter)
 
 // middlewares
 const allowedOrigins = [
@@ -71,7 +53,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true
   },
-  // Añade esta línea para forzar solo polling
   transports: ['polling'] 
 });
 
